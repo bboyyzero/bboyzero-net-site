@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events | BBOY ZERO</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-meta">
+        <span>BBOY ZERO</span>
+        <span>&copy; 2026 The Origin Sound</span>
+      </div>
+      <nav class="menu" aria-label="Main Navigation">
+        <a href="https://song.link/bboyzero" target="_blank" rel="noopener noreferrer">listen</a>
+        <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer">buy</a>
+        <a class="menu-logo" href="index.html" aria-label="BBOY ZERO home">
+          <img src="assets/images/logo-1.png" alt="BBOY ZERO logo" />
+        </a>
+        <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer">store</a>
+        <a href="contact.html">contact</a>
+      </nav>
+    </header>
+
+    <main class="page-wrap">
+      <section class="events-listing" aria-live="polite">
+        <ul id="events-list"></ul>
+      </section>
+
+      <section class="admin-panel" id="admin-panel">
+        <button id="toggle-admin" class="admin-toggle" type="button">admin</button>
+
+        <div id="admin-content" class="admin-content" hidden>
+          <label>
+            admin token
+            <input id="admin-token" type="password" placeholder="Enter admin token" autocomplete="off" />
+          </label>
+
+          <form id="event-form" class="event-form">
+            <label>
+              date
+              <input name="date" type="date" required />
+            </label>
+            <label>
+              city
+              <input name="city" type="text" placeholder="Nashville, TN" required />
+            </label>
+            <label>
+              venue
+              <input name="venue" type="text" placeholder="The Basement East" required />
+            </label>
+            <label>
+              ticket url
+              <input name="ticketUrl" type="url" placeholder="https://..." required />
+            </label>
+            <label>
+              event image upload
+              <input name="imageFile" type="file" accept="image/png,image/jpeg,image/webp,image/gif" />
+            </label>
+            <label>
+              or event image url
+              <input name="imageUrl" type="url" placeholder="https://... or /assets/images/example.jpg" />
+            </label>
+            <label>
+              details
+              <input name="details" type="text" placeholder="Doors 8 PM" />
+            </label>
+            <button type="submit">save event</button>
+          </form>
+
+          <p id="admin-status" class="status-line" role="status" aria-live="polite"></p>
+          <div id="admin-events" class="admin-events"></div>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/events.js"></script>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact | BBOY ZERO</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-meta">
+        <span>BBOY ZERO</span>
+        <span>&copy; 2026 The Origin Sound</span>
+      </div>
+      <nav class="menu" aria-label="Main Navigation">
+        <a href="https://song.link/bboyzero" target="_blank" rel="noopener noreferrer">listen</a>
+        <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer">buy</a>
+        <a class="menu-logo" href="index.html" aria-label="BBOY ZERO home">
+          <img src="assets/images/logo-1.png" alt="BBOY ZERO logo" />
+        </a>
+        <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer">store</a>
+        <a href="contact.html">contact</a>
+      </nav>
+    </header>
+
+    <main class="page-wrap">
+      <section class="contact-wrap">
+        <form id="contact-form" class="contact-form">
+          <label>
+            name
+            <input name="name" type="text" required />
+          </label>
+          <label>
+            email
+            <input name="email" type="email" required />
+          </label>
+          <label>
+            message
+            <textarea name="message" rows="6" required></textarea>
+          </label>
+          <button type="submit">send</button>
+        </form>
+
+        <p id="contact-status" class="status-line" role="status" aria-live="polite"></p>
+
+        <div class="social-links" id="social-links">
+          <a href="https://www.instagram.com/bboyyzero/" target="_blank" rel="noopener noreferrer">instagram</a>
+          <a href="https://www.tiktok.com/@bboyyzero" target="_blank" rel="noopener noreferrer">tiktok</a>
+          <a href="https://www.youtube.com/@BBOYZERO" target="_blank" rel="noopener noreferrer">youtube</a>
+          <a href="https://open.spotify.com/artist/12RxQLuXDIqVoEtz6tVLJd" target="_blank" rel="noopener noreferrer">spotify</a>
+          <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer">bandcamp</a>
+        </div>
+      </section>
+    </main>
+
+    <script src="js/contact.js"></script>
+  </body>
+</html>

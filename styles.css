@@ -1,0 +1,290 @@
+:root {
+  --bg: #f1f1f1;
+  --fg: #000000;
+  --line: #000000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #f1f1f1;
+  border-bottom: 1px solid var(--line);
+}
+
+.header-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem 0.35rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+}
+
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0.8rem 1rem;
+  text-transform: lowercase;
+  letter-spacing: 0.08em;
+}
+
+.menu a {
+  border-bottom: 1px solid transparent;
+  padding-bottom: 0.15rem;
+}
+
+.menu a:hover,
+.menu a:focus-visible {
+  border-bottom-color: var(--line);
+  outline: none;
+}
+
+.menu-logo {
+  width: 44px;
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.menu-logo:hover,
+.menu-logo:focus-visible {
+  border-bottom: 0;
+}
+
+.menu-logo img {
+  width: 100%;
+  height: auto;
+}
+
+.page-wrap {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.home-wrap {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.home-stack-item {
+  margin: 0;
+}
+
+.unreleased-block {
+  border: 1px solid var(--line);
+  padding: 0.7rem;
+}
+
+.unreleased-title {
+  margin: 0 0 0.55rem;
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+}
+
+.embed-wrap {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: #f1f1f1;
+}
+
+.embed-wrap iframe {
+  width: 100%;
+  min-height: 560px;
+  border: 0;
+}
+
+.hero-tile,
+.release-card {
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.events-listing ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.event-item {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.7rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.event-image {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+}
+
+.event-meta {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.ticket-link {
+  width: fit-content;
+  border: 1px solid var(--line);
+  padding: 0.5rem 0.8rem;
+  text-transform: lowercase;
+}
+
+.ticket-link:hover,
+.ticket-link:focus-visible {
+  outline: none;
+  background: #e2e2e2;
+}
+
+.admin-panel {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.admin-toggle,
+.event-form button,
+.contact-form button,
+.admin-event-row button {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--fg);
+  padding: 0.6rem 0.9rem;
+  font: inherit;
+  text-transform: lowercase;
+  cursor: pointer;
+}
+
+.admin-content {
+  margin-top: 1rem;
+}
+
+.event-form,
+.contact-form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.event-form label,
+.contact-form label {
+  display: grid;
+  gap: 0.45rem;
+  text-transform: lowercase;
+}
+
+input,
+textarea {
+  width: 100%;
+  background: #f1f1f1;
+  border: 1px solid var(--line);
+  color: var(--fg);
+  font: inherit;
+  padding: 0.65rem;
+}
+
+.admin-events {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.admin-event-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.5rem;
+  border: 1px solid var(--line);
+}
+
+.contact-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.social-links {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.social-links a {
+  border-bottom: 1px solid transparent;
+  text-transform: lowercase;
+}
+
+.social-links a:hover,
+.social-links a:focus-visible {
+  border-bottom-color: var(--line);
+  outline: none;
+}
+
+.status-line {
+  min-height: 1.4rem;
+  margin: 0.7rem 0 0;
+}
+
+.status-error {
+  font-weight: 700;
+}
+
+.empty-events {
+  padding: 1rem 0;
+}
+
+@media (max-width: 620px) {
+  .header-meta {
+    font-size: 0.73rem;
+    gap: 0.6rem;
+  }
+
+  .menu {
+    gap: 0.8rem;
+    font-size: 0.92rem;
+  }
+
+  .menu-logo {
+    width: 36px;
+  }
+
+  .embed-wrap iframe {
+    min-height: 420px;
+  }
+
+  .admin-event-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
