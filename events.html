@@ -15,10 +15,11 @@
       <nav class="menu" aria-label="Main Navigation">
         <a href="https://song.link/bboyzero" target="_blank" rel="noopener noreferrer">listen</a>
         <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer">buy</a>
+        <a href="https://baton.media/player/bboyzero" target="_blank" rel="noopener noreferrer">unreleased</a>
         <a class="menu-logo" href="index.html" aria-label="BBOY ZERO home">
           <img src="assets/images/logo-1.png" alt="BBOY ZERO logo" />
         </a>
-        <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer">store</a>
+        <a href="events.html">events</a>
         <a href="contact.html">contact</a>
       </nav>
     </header>
@@ -32,10 +33,21 @@
         <button id="toggle-admin" class="admin-toggle" type="button">admin</button>
 
         <div id="admin-content" class="admin-content" hidden>
-          <label>
-            admin token
-            <input id="admin-token" type="password" placeholder="Enter admin token" autocomplete="off" />
-          </label>
+          <div class="admin-auth">
+            <label>
+              admin email
+              <input id="admin-email" type="email" placeholder="admin@email.com" autocomplete="username" />
+            </label>
+            <label>
+              admin password
+              <input id="admin-password" type="password" placeholder="Password" autocomplete="current-password" />
+            </label>
+            <div class="admin-auth-actions">
+              <button id="admin-sign-in" type="button">sign in</button>
+              <button id="admin-sign-out" type="button" hidden>sign out</button>
+            </div>
+            <p id="admin-auth-status" class="status-line" role="status" aria-live="polite"></p>
+          </div>
 
           <form id="event-form" class="event-form">
             <label>
@@ -60,13 +72,13 @@
             </label>
             <label>
               or event image url
-              <input name="imageUrl" type="url" placeholder="https://... or /assets/images/example.jpg" />
+              <input name="imageUrl" type="url" placeholder="https://..." />
             </label>
             <label>
               details
               <input name="details" type="text" placeholder="Doors 8 PM" />
             </label>
-            <button type="submit">save event</button>
+            <button id="save-event-btn" type="submit" disabled>save event</button>
           </form>
 
           <p id="admin-status" class="status-line" role="status" aria-live="polite"></p>
@@ -75,6 +87,8 @@
       </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
     <script src="js/events.js"></script>
   </body>
 </html>

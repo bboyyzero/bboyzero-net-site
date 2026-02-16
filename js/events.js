@@ -1,5 +1,3 @@
-const API_BASE = "/api/events";
-const ADMIN_TOKEN_KEY = "bboyzero_admin_token";
 const MAX_FILE_SIZE_BYTES = 8 * 1024 * 1024;
 
 const listEl = document.getElementById("events-list");
@@ -7,14 +5,30 @@ const adminPanel = document.getElementById("admin-content");
 const toggleAdminBtn = document.getElementById("toggle-admin");
 const form = document.getElementById("event-form");
 const adminEvents = document.getElementById("admin-events");
-const tokenInput = document.getElementById("admin-token");
 const statusEl = document.getElementById("admin-status");
+const authStatusEl = document.getElementById("admin-auth-status");
+const saveEventBtn = document.getElementById("save-event-btn");
+const emailInput = document.getElementById("admin-email");
+const passwordInput = document.getElementById("admin-password");
+const signInBtn = document.getElementById("admin-sign-in");
+const signOutBtn = document.getElementById("admin-sign-out");
 
-tokenInput.value = sessionStorage.getItem(ADMIN_TOKEN_KEY) || "";
+if (toggleAdminBtn && adminPanel) {
+  toggleAdminBtn.addEventListener("click", () => {
+    adminPanel.hidden = !adminPanel.hidden;
+  });
+}
 
 function setStatus(message, isError = false) {
+  if (!statusEl) return;
   statusEl.textContent = message;
   statusEl.classList.toggle("status-error", isError);
+}
+
+function setAuthStatus(message, isError = false) {
+  if (!authStatusEl) return;
+  authStatusEl.textContent = message;
+  authStatusEl.classList.toggle("status-error", isError);
 }
 
 function formatDate(isoDate) {
@@ -35,42 +49,21 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-function toImageUpload(file) {
-  return new Promise((resolve, reject) => {
-    if (!file) return resolve(null);
-    if (file.size > MAX_FILE_SIZE_BYTES) {
-      reject(new Error("Image is too large. Max size is 8MB."));
-      return;
-    }
+function setAuthState(user) {
+  const signedIn = Boolean(user);
+  if (saveEventBtn) saveEventBtn.disabled = !signedIn;
+  if (signInBtn) signInBtn.hidden = signedIn;
+  if (signOutBtn) signOutBtn.hidden = !signedIn;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = String(reader.result || "");
-      const parts = result.split(",");
-      if (parts.length !== 2) {
-        reject(new Error("Could not process image."));
-        return;
-      }
-
-      resolve({
-        filename: file.name,
-        mimeType: file.type,
-        dataBase64: parts[1],
-      });
-    };
-    reader.onerror = () => reject(new Error("Could not read image file."));
-    reader.readAsDataURL(file);
-  });
-}
-
-async function fetchEvents() {
-  const res = await fetch(API_BASE, { cache: "no-store" });
-  if (!res.ok) throw new Error("Could not load events");
-  const data = await res.json();
-  return Array.isArray(data.events) ? data.events : [];
+  if (signedIn) {
+    setAuthStatus(`Signed in as ${user.email || "admin"}.`);
+  } else {
+    setAuthStatus("Sign in required for event edits.");
+  }
 }
 
 function renderEvents(events) {
+  if (!listEl) return;
   listEl.innerHTML = "";
 
   if (!events.length) {
@@ -83,27 +76,31 @@ function renderEvents(events) {
 
   events.forEach((event) => {
     const li = document.createElement("li");
-    li.className = "event-item";
+    const hasImage = Boolean(event.imageUrl);
+    li.className = hasImage ? "event-item event-with-image" : "event-item";
 
-    const image = event.imageUrl
+    const image = hasImage
       ? `<img class="event-image" src="${escapeHtml(event.imageUrl)}" alt="${escapeHtml(event.city)} event image" loading="lazy" />`
       : "";
 
     li.innerHTML = `
       ${image}
-      <div class="event-date">${formatDate(event.date)}</div>
-      <div class="event-meta">
-        <strong>${escapeHtml(event.city)}</strong>
-        <span>${escapeHtml(event.venue)}</span>
-        ${event.details ? `<span>${escapeHtml(event.details)}</span>` : ""}
+      <div class="event-content">
+        <div class="event-date">${formatDate(event.date)}</div>
+        <div class="event-meta">
+          <strong>${escapeHtml(event.city)}</strong>
+          <span>${escapeHtml(event.venue)}</span>
+          ${event.details ? `<span>${escapeHtml(event.details)}</span>` : ""}
+        </div>
+        <a class="ticket-link" href="${escapeHtml(event.ticketUrl)}" target="_blank" rel="noopener noreferrer">tickets</a>
       </div>
-      <a class="ticket-link" href="${escapeHtml(event.ticketUrl)}" target="_blank" rel="noopener noreferrer">tickets</a>
     `;
     listEl.append(li);
   });
 }
 
-function renderAdmin(events) {
+function renderAdmin(events, canEdit, deleteHandler) {
+  if (!adminEvents) return;
   adminEvents.innerHTML = "";
 
   events.forEach((event) => {
@@ -114,98 +111,180 @@ function renderAdmin(events) {
     const del = document.createElement("button");
     del.type = "button";
     del.textContent = "delete";
-    del.addEventListener("click", async () => {
-      const token = tokenInput.value.trim();
-      if (!token) {
-        setStatus("Enter admin token to delete events.", true);
-        return;
-      }
-
-      const res = await fetch(`${API_BASE}/${encodeURIComponent(event.id)}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        setStatus("Delete failed. Check admin token.", true);
-        return;
-      }
-
-      setStatus("Event deleted.");
-      await refresh();
-    });
+    del.disabled = !canEdit;
+    del.addEventListener("click", () => deleteHandler(event.id, canEdit));
 
     row.append(del);
     adminEvents.append(row);
   });
 }
 
-async function refresh() {
-  try {
-    const events = await fetchEvents();
-    renderEvents(events);
-    renderAdmin(events);
-  } catch {
-    setStatus("Unable to connect to events API.", true);
-  }
-}
+(function init() {
+  const config = window.SUPABASE_CONFIG || {};
+  const supabaseGlobal = window.supabase;
 
-toggleAdminBtn.addEventListener("click", () => {
-  adminPanel.hidden = !adminPanel.hidden;
-});
-
-tokenInput.addEventListener("input", () => {
-  sessionStorage.setItem(ADMIN_TOKEN_KEY, tokenInput.value.trim());
-});
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const token = tokenInput.value.trim();
-  if (!token) {
-    setStatus("Enter admin token before saving.", true);
+  if (!supabaseGlobal || typeof supabaseGlobal.createClient !== "function") {
+    setStatus("Supabase script failed to load.", true);
+    setAuthStatus("Admin unavailable until Supabase loads.", true);
+    renderEvents([]);
+    setAuthState(null);
     return;
   }
 
-  const data = new FormData(form);
-  const imageFile = data.get("imageFile");
+  if (!config.url || !config.anonKey || String(config.url).includes("YOUR_PROJECT_ID")) {
+    setStatus("Configure js/supabase-config.js first.", true);
+    setAuthStatus("Missing Supabase config.", true);
+    renderEvents([]);
+    setAuthState(null);
+    return;
+  }
 
-  let imageUpload = null;
-  try {
-    if (imageFile instanceof File && imageFile.size > 0) {
-      imageUpload = await toImageUpload(imageFile);
+  const supabase = supabaseGlobal.createClient(config.url, config.anonKey);
+
+  async function fetchEvents() {
+    const { data, error } = await supabase
+      .from("events")
+      .select("id, date, city, venue, ticket_url, image_url, details")
+      .order("date", { ascending: true });
+
+    if (error) throw error;
+    return (data || []).map((row) => ({
+      id: row.id,
+      date: row.date,
+      city: row.city,
+      venue: row.venue,
+      ticketUrl: row.ticket_url,
+      imageUrl: row.image_url || "",
+      details: row.details || "",
+    }));
+  }
+
+  async function uploadEventImage(file) {
+    if (!file || file.size === 0) return "";
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      throw new Error("Image is too large. Max size is 8MB.");
     }
-  } catch (error) {
-    setStatus(error.message || "Image upload failed.", true);
-    return;
+
+    const extension = (file.name.split(".").pop() || "jpg").toLowerCase();
+    const objectPath = `events/${Date.now()}-${crypto.randomUUID()}.${extension}`;
+    const bucket = config.storageBucket || "event-images";
+
+    const { error } = await supabase.storage.from(bucket).upload(objectPath, file, { upsert: false });
+    if (error) throw error;
+
+    const { data } = supabase.storage.from(bucket).getPublicUrl(objectPath);
+    return data.publicUrl || "";
   }
 
-  const payload = {
-    date: String(data.get("date") || "").trim(),
-    city: String(data.get("city") || "").trim(),
-    venue: String(data.get("venue") || "").trim(),
-    ticketUrl: String(data.get("ticketUrl") || "").trim(),
-    imageUrl: String(data.get("imageUrl") || "").trim(),
-    imageUpload,
-    details: String(data.get("details") || "").trim(),
-  };
+  async function refresh() {
+    try {
+      const events = await fetchEvents();
+      const { data: auth } = await supabase.auth.getUser();
+      const canEdit = Boolean(auth && auth.user);
+      renderEvents(events);
+      renderAdmin(events, canEdit, async (id, editable) => {
+        if (!editable) return;
+        const { error } = await supabase.from("events").delete().eq("id", id);
+        if (error) {
+          setStatus("Delete failed. Check admin sign-in.", true);
+          return;
+        }
+        setStatus("Event deleted.");
+        await refresh();
+      });
+    } catch {
+      setStatus("Unable to load events.", true);
+    }
+  }
 
-  const res = await fetch(API_BASE, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(payload),
+  if (signInBtn && emailInput && passwordInput) {
+    signInBtn.addEventListener("click", async () => {
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      if (!email || !password) {
+        setAuthStatus("Enter admin email and password.", true);
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setAuthStatus("Sign-in failed.", true);
+        return;
+      }
+
+      passwordInput.value = "";
+      setAuthState(data.user);
+      setStatus("Admin sign-in successful.");
+      await refresh();
+    });
+  }
+
+  if (signOutBtn) {
+    signOutBtn.addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      setAuthState(null);
+      setStatus("Signed out.");
+      await refresh();
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const { data: auth } = await supabase.auth.getUser();
+      if (!auth || !auth.user) {
+        setStatus("Sign in first.", true);
+        return;
+      }
+
+      const data = new FormData(form);
+      const imageFile = data.get("imageFile");
+
+      let uploadedUrl = "";
+      try {
+        if (imageFile instanceof File && imageFile.size > 0) {
+          uploadedUrl = await uploadEventImage(imageFile);
+        }
+      } catch {
+        setStatus("Image upload failed.", true);
+        return;
+      }
+
+      const row = {
+        id: crypto.randomUUID(),
+        date: String(data.get("date") || "").trim(),
+        city: String(data.get("city") || "").trim(),
+        venue: String(data.get("venue") || "").trim(),
+        ticket_url: String(data.get("ticketUrl") || "").trim(),
+        image_url: uploadedUrl || String(data.get("imageUrl") || "").trim(),
+        details: String(data.get("details") || "").trim(),
+      };
+
+      if (!row.date || !row.city || !row.venue || !row.ticket_url) {
+        setStatus("Fill required fields.", true);
+        return;
+      }
+
+      const { error } = await supabase.from("events").insert(row);
+      if (error) {
+        setStatus("Save failed. Check admin permissions.", true);
+        return;
+      }
+
+      form.reset();
+      setStatus("Event saved.");
+      await refresh();
+    });
+  }
+
+  supabase.auth.onAuthStateChange((_event, session) => {
+    setAuthState(session?.user || null);
   });
 
-  if (!res.ok) {
-    setStatus("Save failed. Check admin token and fields.", true);
-    return;
-  }
-
-  form.reset();
-  setStatus("Event saved.");
-  await refresh();
-});
-
-refresh();
+  (async () => {
+    const { data } = await supabase.auth.getSession();
+    setAuthState(data.session?.user || null);
+    await refresh();
+  })();
+})();

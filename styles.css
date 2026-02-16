@@ -12,7 +12,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   background: var(--bg);
   color: var(--fg);
 }
@@ -149,6 +149,12 @@ a {
   border: 1px solid var(--line);
 }
 
+.event-content {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+
 .event-meta {
   display: grid;
   gap: 0.25rem;
@@ -190,6 +196,17 @@ a {
   margin-top: 1rem;
 }
 
+.admin-auth {
+  margin-bottom: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.admin-auth-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
 .event-form,
 .contact-form {
   display: grid;
@@ -228,6 +245,11 @@ textarea {
   border: 1px solid var(--line);
 }
 
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .contact-wrap {
   max-width: 720px;
   margin: 0 auto;
@@ -262,6 +284,19 @@ textarea {
 
 .empty-events {
   padding: 1rem 0;
+}
+
+@media (min-width: 900px) {
+  .event-item.event-with-image {
+    grid-template-columns: 480px 1fr;
+    column-gap: 1.6rem;
+    align-items: start;
+  }
+
+  .event-item.event-with-image .event-image {
+    width: 480px;
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 620px) {
