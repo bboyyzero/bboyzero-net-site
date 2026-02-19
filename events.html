@@ -13,14 +13,20 @@
         <span>BBOY ZERO</span>
         <span>&copy; 2026 The Origin Sound</span>
       </div>
-      <nav class="menu" aria-label="Main Navigation">
-        <a href="https://song.link/bboyzero" target="_blank" rel="noopener noreferrer">listen</a>
-        <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer">buy</a>
-        <a href="https://baton.media/player/bboyzero" target="_blank" rel="noopener noreferrer">[unreleased]</a>
-        <a href="events.html">events</a>
+                        <nav class="menu" aria-label="Main Navigation">
+        <div class="menu-dropdown" id="audio-menu">
+          <button class="menu-dropdown-toggle" type="button" aria-expanded="false" aria-controls="audio-menu-list">audio</button>
+          <div class="menu-dropdown-list" id="audio-menu-list" role="menu">
+            <a href="https://song.link/bboyzero" target="_blank" rel="noopener noreferrer" role="menuitem">listen</a>
+            <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer" role="menuitem">buy</a>
+            <a href="https://baton.media/player/bboyzero" target="_blank" rel="noopener noreferrer" role="menuitem">[unreleased]</a>
+          </div>
+        </div>
+        <a href="design-portfolio.html">VISUAL</a>
         <a class="menu-logo" href="index.html" aria-label="BBOY ZERO home">
           <img src="assets/images/logo-1.png" alt="BBOY ZERO logo" />
         </a>
+        <a href="events.html">events</a>
         <a href="contact.html">contact</a>
       </nav>
     </header>
@@ -91,5 +97,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
     <script src="js/events.js"></script>
+      <script src="js/menu.js"></script>
   </body>
 </html>

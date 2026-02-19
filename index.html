@@ -13,14 +13,20 @@
         <span>BBOY ZERO</span>
         <span>&copy; 2026 The Origin Sound</span>
       </div>
-      <nav class="menu" aria-label="Main Navigation">
-        <a href="https://song.link/bboyzero" target="_blank" rel="noopener noreferrer">listen</a>
-        <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer">buy</a>
-        <a href="https://baton.media/player/bboyzero" target="_blank" rel="noopener noreferrer">[unreleased]</a>
-        <a href="events.html">events</a>
+                        <nav class="menu" aria-label="Main Navigation">
+        <div class="menu-dropdown" id="audio-menu">
+          <button class="menu-dropdown-toggle" type="button" aria-expanded="false" aria-controls="audio-menu-list">audio</button>
+          <div class="menu-dropdown-list" id="audio-menu-list" role="menu">
+            <a href="https://song.link/bboyzero" target="_blank" rel="noopener noreferrer" role="menuitem">listen</a>
+            <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer" role="menuitem">buy</a>
+            <a href="https://baton.media/player/bboyzero" target="_blank" rel="noopener noreferrer" role="menuitem">[unreleased]</a>
+          </div>
+        </div>
+        <a href="design-portfolio.html">VISUAL</a>
         <a class="menu-logo" href="index.html" aria-label="BBOY ZERO home">
           <img src="assets/images/logo-1.png" alt="BBOY ZERO logo" />
         </a>
+        <a href="events.html">events</a>
         <a href="contact.html">contact</a>
       </nav>
     </header>
@@ -28,9 +34,17 @@
     <main class="page-wrap home-wrap" aria-label="Homepage gallery">
       <section class="home-stack-item unreleased-block" aria-label="Producer and Designer">
         <h2 class="unreleased-title">[PRODUCER &amp; DESIGNER OF INDEPENDENT MUSIC]</h2>
-        <figure class="hero-tile">
+        <figure class="hero-tile hero-tile-no-divider">
           <img src="assets/images/photo-2.jpg" alt="BBOY ZERO featured photo" loading="eager" />
         </figure>
+        <div class="social-links social-links-home" id="social-links">
+          <a href="https://www.instagram.com/bboyyzero/" target="_blank" rel="noopener noreferrer">instagram</a>
+          <a href="https://www.tiktok.com/@bboyyzero" target="_blank" rel="noopener noreferrer">tiktok</a>
+          <a href="https://www.youtube.com/@BBOYZERO" target="_blank" rel="noopener noreferrer">youtube</a>
+          <a href="https://open.spotify.com/artist/12RxQLuXDIqVoEtz6tVLJd" target="_blank" rel="noopener noreferrer">spotify</a>
+          <a href="https://bboyzero.bandcamp.com/" target="_blank" rel="noopener noreferrer">bandcamp</a>
+          <a href="https://substack.com/@zmontana" target="_blank" rel="noopener noreferrer">substack</a>
+        </div>
       </section>
 
       <section class="home-stack-item unreleased-block" aria-label="Spotify Playlist">
@@ -43,17 +57,7 @@
         ></iframe>
       </section>
 
-      <section class="home-stack-item unreleased-block" aria-label="Unreleased Player">
-        <h2 class="unreleased-title">[UNRELEASED]</h2>
-        <div class="embed-wrap">
-          <iframe
-            src="https://baton.media/player/bboyzero"
-            title="BBOY ZERO unreleased player"
-            loading="lazy"
-            allow="autoplay; fullscreen"
-          ></iframe>
-        </div>
-      </section>
+      
 
       <section class="home-stack-item unreleased-block" aria-label="Dilla Day at The NMAAM">
         <h2 class="unreleased-title">[DILLA DAY @ THE NMAAM]</h2>
@@ -81,5 +85,6 @@
         </figure>
       </section>
     </main>
+      <script src="js/menu.js"></script>
   </body>
 </html>
